@@ -141,14 +141,20 @@ DOCKEREOF
 RUN mkdir -p /etc/postgresql-tls \
  && cp /etc/ssl/certs/ssl-cert-snakeoil.pem /etc/postgresql-tls/server.crt \
  && cp /etc/ssl/private/ssl-cert-snakeoil.key /etc/postgresql-tls/server.key \
- && chown -R postgres:postgres /etc/postgresql-tls \
- && chmod 600 /etc/postgresql-tls/server.key
+ && chmod 0644 /etc/postgresql-tls/server.crt /etc/postgresql-tls/server.key
 DOCKEREOF
     cat > "${project_path}/.ddev/docker-compose.postgres-tls.yaml" <<'YAMLEOF'
 # PostgreSQL with TLS, as a hosted database has it: the Learn app connects with ssl 'require'.
 # Written by the Next.js builder of the workspace.
 services:
   db:
+    # The key file must belong to the user the server runs as and be readable by it alone: copied at
+    # start, then the image's own entrypoint runs with the command below.
+    entrypoint:
+      - bash
+      - -c
+      - install -m 0644 /etc/postgresql-tls/server.crt /tmp/server.crt && install -m 0600 /etc/postgresql-tls/server.key /tmp/server.key && exec docker-entrypoint.sh "$$@"
+      - postgres-tls
     command:
       - -c
       - config_file=/etc/postgresql/postgresql.conf
@@ -157,9 +163,9 @@ services:
       - -c
       - ssl=on
       - -c
-      - ssl_cert_file=/etc/postgresql-tls/server.crt
+      - ssl_cert_file=/tmp/server.crt
       - -c
-      - ssl_key_file=/etc/postgresql-tls/server.key
+      - ssl_key_file=/tmp/server.key
 YAMLEOF
   fi
 }

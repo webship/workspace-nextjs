@@ -69,7 +69,7 @@ test('the functions carry the names the core\'s tools look for, and build the ap
   assert.match(src, /pnpm add next@\$\{version\}/, 'the release asked for, not the course\'s pinned one');
   assert.match(src, /POSTGRES_URL=postgres:\/\/db:db@db:5432\/db/, 'the database settings are the container\'s own values');
   assert.match(src, /ssl=on/, 'PostgreSQL with TLS, as the Learn app asks for it');
-  assert.match(src, /chown -R postgres:postgres \/etc\/postgresql-tls/, 'a key file the database server may read');
+  assert.match(src, /install -m 0600 \/etc\/postgresql-tls\/server\.key \/tmp\/server\.key/, 'a key file of the user the database server runs as, whoever that is');
   assert.match(src, /CREATE EXTENSION IF NOT EXISTS \\"uuid-ossp\\"/, 'the extension the course\'s seed races on is made first');
   assert.match(src, /curl -sS http:\/\/127\.0\.0\.1:\$\{NEXTJS_PORT\}\/seed/, 'the course\'s own seed');
   assert.match(src, /allowedDevOrigins/, 'the development server answers the project\'s address');
