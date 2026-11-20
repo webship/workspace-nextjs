@@ -1,0 +1,100 @@
+{
+  "name": "@webship.co/workspace-nextjs",
+  "version": "1.0.0",
+  "description": "Next.js for Webship Workspace: the builder (`cmd-nextjs-project.sh`, an app made with create-next-app, the default one or the finished app of the official Learn course on PostgreSQL, built for production and served in a container) and the CLI tool in every sites folder, the default accounts and the test data of the Learn app, the Next.js step pack wired into the testing setup, and its AI items in their folders: two agents, a skill, a command and two prompts.",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/webship/workspace-nextjs.git"
+  },
+  "files": [
+    "dist/src",
+    "ai",
+    "commands",
+    "features",
+    "scripts",
+    "testing",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepare": "npm run build",
+    "test": "npm run build && node --test dist/tests/*.test.js",
+    "lint": "tsc -p tsconfig.json --noEmit"
+  },
+  "workspacePlugin": {
+    "name": "nextjs",
+    "label": "Next.js",
+    "needs": [
+      [
+        "dev",
+        "test",
+        "sandboxes",
+        "demos"
+      ],
+      "ai-agents",
+      "ai-skills",
+      "ai-commands",
+      "ai-prompts"
+    ],
+    "commands": {
+      "types": [
+        "sites"
+      ],
+      "workspaces": [
+        "dev",
+        "test",
+        "sandboxes",
+        "demos"
+      ],
+      "files": [
+        "commands/cmd-nextjs-project.sh",
+        "commands/cmd-tools-nextjs-cli.sh"
+      ]
+    },
+    "scripts": {
+      "functions": [
+        "scripts/functions/fun-nextjs.sh"
+      ],
+      "args": [
+        "scripts/args/arg-nextjs.sh",
+        "scripts/args/arg-nextjs-cli.sh"
+      ],
+      "machine": [
+        "testing/site.feature",
+        "testing/default-site.feature",
+        "scripts/node/nextjs-test-app.cjs",
+        "scripts/node/nextjs-session-route.ts"
+      ]
+    },
+    "ai": {
+      "agents": [
+        "ai/agents/nextjs-site-builder.md",
+        "ai/agents/nextjs-tester.md"
+      ],
+      "skills": [
+        "ai/skills/nextjs-scenarios"
+      ],
+      "commands": [
+        "ai/commands/nextjs-test.md"
+      ],
+      "prompts": [
+        "ai/prompts/nextjs-build-and-test.md",
+        "ai/prompts/nextjs-scenarios-for-a-page.md"
+      ]
+    },
+    "features": [
+      "features/nextjs.feature"
+    ]
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@webship.co/workspace-plugin-api": "^1.0.11",
+    "typescript": "^5.9.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
