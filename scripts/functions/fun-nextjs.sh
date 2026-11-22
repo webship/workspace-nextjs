@@ -39,7 +39,7 @@ readonly NEXTJS_LEARN_REF='bb2558441a6673ab76c89914c25018bffa27a2ba';
 # The Node.js scripts the plugin places with itself in core/scripts/plugins/nextjs/: the accounts and
 # the test data of the Learn app (written into its own tables with its own packages), and the one
 # route the Learn app gets for the step pack (the session of the browser as JSON).
-NEXTJS_TEST_APP="${WORKSPACE_SCRIPTS}/plugins/nextjs/nextjs-test-app.cjs";
+NEXTJS_TEST_APP="${WORKSPACE_SCRIPTS}/plugins/nextjs/nextjs-test-app.cts";
 NEXTJS_SESSION_ROUTE="${WORKSPACE_SCRIPTS}/plugins/nextjs/nextjs-session-route.ts";
 
 # The default accounts of the Learn app, the ones a scenario logs in as. The app has no roles: both
@@ -260,17 +260,17 @@ open(os.path.join(site, 'next.config.mjs'), 'w').write('/** @type {import("next"
 PYEOF
 }
 
-# Run the plugin's script for the Learn app's accounts and test data (nextjs-test-app.cjs) in the
+# Run the plugin's script for the Learn app's accounts and test data (nextjs-test-app.cts) in the
 # app's folder, with the app's own Node.js packages; the script is in the app only for that call.
 function nextjs_test_app() {
   if [ ! -f "${NEXTJS_TEST_APP}" ] ; then
     echo "The plugin's test app script is missing: ${NEXTJS_TEST_APP} (install the plugin again)." ;
     return 1 ;
   fi
-  cp "${NEXTJS_TEST_APP}" site/.webship-test-app.cjs || return 1 ;
+  cp "${NEXTJS_TEST_APP}" site/.webship-test-app.cts || return 1 ;
   local status=0 ;
-  nextjs_exec "ACCOUNT_PASSWORD='${NEXTJS_ACCOUNT_PASSWORD:-dD.123123ddd}' node .webship-test-app.cjs $*" || status=$? ;
-  rm -f site/.webship-test-app.cjs ;
+  nextjs_exec "ACCOUNT_PASSWORD='${NEXTJS_ACCOUNT_PASSWORD:-dD.123123ddd}' node .webship-test-app.cts $*" || status=$? ;
+  rm -f site/.webship-test-app.cts ;
   return ${status} ;
 }
 
