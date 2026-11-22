@@ -66,7 +66,7 @@ Everything the builder runs for an app runs in the app's own container, through 
 | `commands/cmd-tools-nextjs-cli.sh` | `next` and the package manager for one app: what the app is, a `next` command, the package manager, a production build, the development server, an update, the test data, the default accounts |
 | `scripts/functions/fun-nextjs.sh` | The bash functions behind both, sourced by bootstrap once installed; the names the core's tools look for (`set_nextjs_users`, `add_nextjs_users`, `cancel_nextjs_users`, `testing_configure_nextjs`) |
 | `scripts/args/arg-nextjs.sh`, `arg-nextjs-cli.sh` | Their argparse; the Build form draws the builder's flags from the first |
-| `scripts/node/nextjs-test-app.cjs` | The Learn app's accounts and the step pack's test data, written into the app's own tables with its own packages (the same as the step pack's build) |
+| `scripts/node/nextjs-test-app.cts` | The Learn app's accounts and the step pack's test data, written into the app's own tables with its own packages (the same as the step pack's build) |
 | `scripts/node/nextjs-session-route.ts` | The one route the Learn app gets for the step pack: `/api/auth/session`, the session of the browser as JSON |
 | `testing/site.feature`, `testing/default-site.feature` | The first feature a project gets when testing is set up: the Learn app's, the default app's |
 | `ai/agents/nextjs-site-builder.md` | The agent that builds and maintains Next.js apps with these commands |
@@ -91,7 +91,7 @@ only this:
 | Recognised by | The DDEV project type | Its files: `.ddev/config.nextjs.yaml`, and `.ddev/nextjs-example` (`learn` or `default`) |
 | Getting the code | `wp core download` | `create-next-app`: its defaults, or `--example` with the Learn course's finished app (at a pinned commit, with pnpm), moved to the release asked for (`--next-version`, 16.4.6 by default) |
 | Install | `wp core install` | For the Learn app: the course's own `/seed` route on the development server (the dashboard's start page is prerendered with its data), then `next build` and `next start` |
-| Accounts | WP-CLI | `scripts/node/nextjs-test-app.cjs`, run by the app's Node.js with its own packages for the time of the call |
+| Accounts | WP-CLI | `scripts/node/nextjs-test-app.cts`, run by the app's Node.js with its own packages for the time of the call |
 | Users menu of the row | Reads the project type | Does not apply (the type is `generic`): `cmd-tools-nextjs-cli.sh <name> --add-users`, or `cmd-tools-add-users.sh <name> nextjs` |
 
 ## The commands
@@ -199,9 +199,14 @@ command and flag it names exists: the tests check both.
 
 ```bash
 npm install
-npm run lint && npm test         # the manifest, the commands, the functions, the items
+npm run lint && npm test         # the manifest, the commands, the functions, the items, the Learn app's script
 git ls-files -z '*.sh' | xargs -0 -n1 bash -n
 ```
+
+The plugin is TypeScript throughout. `scripts/node/nextjs-test-app.cts` is not compiled: the builder copies it
+into the app for the time of a call and the app's Node.js runs it as it is (type stripping, from Node.js
+22.18, the lowest the Workspace accepts). It is a CommonJS module with erasable syntax only; `npm run lint`
+type-checks it (`tsconfig.scripts.json`) and `npm test` runs it against stand-ins for the app's packages.
 
 Prove it in a throwaway workspace before a release: `webship-workspace init`, then require the plugin
 from its packed tarball, activate and install it with `--with-needs`; check that Settings lists it, the

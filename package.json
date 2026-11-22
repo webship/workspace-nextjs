@@ -22,7 +22,7 @@
     "build": "tsc -p tsconfig.json",
     "prepare": "npm run build",
     "test": "npm run build && node --test dist/tests/*.test.js",
-    "lint": "tsc -p tsconfig.json --noEmit"
+    "lint": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.scripts.json"
   },
   "workspacePlugin": {
     "name": "nextjs",
@@ -65,7 +65,7 @@
       "machine": [
         "testing/site.feature",
         "testing/default-site.feature",
-        "scripts/node/nextjs-test-app.cjs",
+        "scripts/node/nextjs-test-app.cts",
         "scripts/node/nextjs-session-route.ts"
       ]
     },
