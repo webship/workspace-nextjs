@@ -20,7 +20,7 @@
 //
 // The database is the app's own (POSTGRES_URL in its .env).
 //
-// TypeScript, run by Node.js as it is (type stripping, from Node.js 22.18): a CommonJS module (.cts) with
+// TypeScript, run by Node.js as it is (type stripping, Node.js 24 or later): a CommonJS module (.cts) with
 // erasable syntax only, so there is nothing to build. `npm run lint` of the plugin type-checks it.
 'use strict';
 
